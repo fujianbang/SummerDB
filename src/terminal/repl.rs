@@ -38,6 +38,12 @@ impl Repl {
 "#
             );
         }
+
+        // exit process
+        if input == "exit" {
+            println!("Bye ~");
+            std::process::exit(0);
+        }
         Ok(())
     }
 
@@ -50,7 +56,7 @@ impl Repl {
         )?;
         writeln!(
             &self.console,
-            "Connected to {}. Enter {} for help.",
+            "Connected to {}. Enter {} for help.\n",
             self.name.as_str(),
             style("? or help").cyan()
         )?;

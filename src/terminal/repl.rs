@@ -50,6 +50,8 @@ impl Repl {
             println!("Bye ~");
             std::process::exit(0);
         }
+
+        println!("Unknown command: {}", input);
         Ok(())
     }
 

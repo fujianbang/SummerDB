@@ -2,10 +2,10 @@ use anyhow::Result;
 use console::{style, Term};
 use std::io::Write;
 
-#[derive(Debug)]
 pub struct Repl {
     name: String,
     version: String,
+    prompt: String,
     console: Term,
 }
 
@@ -14,6 +14,7 @@ impl Repl {
         Self {
             name: String::new(),
             version: String::new(),
+            prompt: String::from("> "),
             console: Term::stdout(),
         }
     }
@@ -27,6 +28,11 @@ impl Repl {
     /// Give repl a version
     pub fn with_version(mut self, version: &str) -> Self {
         self.version = version.to_string();
+        self
+    }
+
+    pub fn with_prompt(mut self, prompt: &str) -> Self {
+        self.prompt = prompt.to_string();
         self
     }
 
@@ -62,7 +68,9 @@ impl Repl {
         )?;
 
         loop {
-            write!(&self.console, "> ")?;
+            // print prompt
+            write!(&self.console, "{}", &self.prompt)?;
+
             let input = self.console.read_line()?;
             self.execute(&input).await?;
         }

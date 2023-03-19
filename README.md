@@ -4,6 +4,18 @@
 
 A distributed SQL database in Rust.
 
+# Architecture
+
+## front-end
+* tokenizer
+* parser
+* code generator
+
+## back-end
+* virtual machine
+* b-tree
+* pager
+* os interface
 
 
 ## Inspired By

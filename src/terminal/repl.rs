@@ -15,15 +15,6 @@ pub struct Repl {
 }
 
 impl Repl {
-    pub fn new() -> Repl {
-        Self {
-            name: String::new(),
-            version: String::new(),
-            prompt: String::from("> "),
-            console: Term::stdout(),
-        }
-    }
-
     /// Give repl a name
     pub fn with_name(mut self, name: &str) -> Self {
         self.name = name.to_string();
@@ -42,6 +33,9 @@ impl Repl {
     }
 
     async fn execute(&self, input: &str) -> Result<()> {
+        if input.is_empty() {
+            return Ok(());
+        }
         if input.starts_with('!') {
             let meta_commandd_result = self.execute_meta_command(input).await?;
             // TODO do something
@@ -134,7 +128,12 @@ impl Repl {
 
 impl Default for Repl {
     fn default() -> Self {
-        Self::new()
+        Self {
+            name: String::new(),
+            version: String::new(),
+            prompt: String::from("> "),
+            console: Term::stdout(),
+        }
     }
 }
 

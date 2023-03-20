@@ -3,7 +3,7 @@ use summer::repl::Repl;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut repl = Repl::new()
+    let mut repl = Repl::default()
         .with_name("SummerDB")
         .with_version("0.1.0")
         .with_prompt("summer > ");

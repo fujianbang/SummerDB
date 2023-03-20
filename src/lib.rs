@@ -1,3 +1,3 @@
  mod terminal;
 
- pub use terminal::Repl;
+ pub use terminal::repl;

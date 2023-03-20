@@ -2,6 +2,11 @@ use anyhow::{anyhow, Result};
 use console::{style, Term};
 use std::io::Write;
 
+use super::{
+    retrive_insert_sql,
+    statement::{Statement, StatementType},
+};
+
 pub struct Repl {
     name: String,
     version: String,
@@ -80,7 +85,8 @@ impl Repl {
 
     async fn prepare_statement(&self, input: &str) -> Result<Statement> {
         if input.starts_with("insert") {
-            return Ok(Statement::new(StatementType::Insert));
+            let statement = retrive_insert_sql(input)?;
+            return Ok(statement);
         } else if input.starts_with("select") {
             return Ok(Statement::new(StatementType::Select));
         }
@@ -92,7 +98,7 @@ impl Repl {
     async fn execute_statement(&self, statement: &Statement) -> Result<()> {
         match statement.statement_type {
             StatementType::Insert => {
-                println!("This is where we would do an insert.");
+                println!("executed insert: {:?}", statement.row_to_insert);
             }
             StatementType::Select => {
                 println!("This is where we would do a select.");
@@ -135,19 +141,4 @@ impl Default for Repl {
 enum MetaCommandResult {
     Success,
     UnrecognizedCommand,
-}
-
-enum StatementType {
-    Insert,
-    Select,
-}
-
-struct Statement {
-    statement_type: StatementType,
-}
-
-impl Statement {
-    fn new(statement_type: StatementType) -> Self {
-        Self { statement_type }
-    }
 }

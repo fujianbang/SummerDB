@@ -10,4 +10,5 @@ path = "src/bin/summersql.rs"
 [dependencies]
 anyhow = "1.0.70"
 console = "0.15.5"
+regex = "1.7.1"
 tokio = { version = "1.26.0", features = ["rt", "macros", "rt-multi-thread"] }

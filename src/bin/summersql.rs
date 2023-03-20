@@ -1,5 +1,5 @@
 use anyhow::Result;
-use summer::Repl;
+use summer::repl::Repl;
 
 #[tokio::main]
 async fn main() -> Result<()> {

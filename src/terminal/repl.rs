@@ -1,4 +1,4 @@
-use anyhow::{Ok, Result};
+use anyhow::{anyhow, Result};
 use console::{style, Term};
 use std::io::Write;
 
@@ -38,15 +38,30 @@ impl Repl {
 
     async fn execute(&self, input: &str) -> Result<()> {
         if input.starts_with('!') {
-            return self.execute_command(input).await;
+            let meta_commandd_result = self.execute_meta_command(input).await?;
+            // TODO do something
+            return match meta_commandd_result {
+                MetaCommandResult::Success => Ok(()),
+                MetaCommandResult::UnrecognizedCommand => Ok(()),
+            };
         }
 
-        println!("Unknown command: {}", input);
-        Ok(())
+        let statement_result = self.prepare_statement(input).await;
+        match statement_result {
+            Ok(statement) => {
+                // execute statement
+                self.execute_statement(&statement).await?;
+                Ok(())
+            }
+            Err(e) => {
+                println!("Error: {}", e);
+                Ok(())
+            }
+        }
     }
 
     /// execute meta command
-    async fn execute_command(&self, command: &str) -> Result<()> {
+    async fn execute_meta_command(&self, command: &str) -> Result<MetaCommandResult> {
         match command {
             "!help" => {
                 println!("TODO ~");
@@ -57,9 +72,20 @@ impl Repl {
             }
             _ => {
                 println!("Unrecognized command: {}", command);
+                return Ok(MetaCommandResult::UnrecognizedCommand);
             }
         }
-        Ok(())
+        Ok(MetaCommandResult::Success)
+    }
+
+    async fn prepare_statement(&self, input: &str) -> Result<Statement> {
+        if input.starts_with("insert") {
+            return Ok(Statement::new(StatementType::Insert));
+        } else if input.starts_with("select") {
+            return Ok(Statement::new(StatementType::Select));
+        }
+
+        Err(anyhow!(format!("Unknown statement: {}", input)))
     }
 
     /// execute sql statement
@@ -111,11 +137,6 @@ enum MetaCommandResult {
     UnrecognizedCommand,
 }
 
-enum PrepareResult {
-    Success,
-    UnrecognizedStatement,
-}
-
 enum StatementType {
     Insert,
     Select,
@@ -123,4 +144,10 @@ enum StatementType {
 
 struct Statement {
     statement_type: StatementType,
+}
+
+impl Statement {
+    fn new(statement_type: StatementType) -> Self {
+        Self { statement_type }
+    }
 }

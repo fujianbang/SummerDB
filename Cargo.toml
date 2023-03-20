@@ -1,11 +1,11 @@
 [package]
-name = "taurus-db"
+name = "summer"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "tasql"
-path = "src/bin/tasql.rs"
+name = "summersql"
+path = "src/bin/summersql.rs"
 
 [dependencies]
 anyhow = "1.0.70"

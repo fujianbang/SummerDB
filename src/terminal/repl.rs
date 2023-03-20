@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use console::{style, Term};
 use std::io::Write;
 
@@ -37,21 +37,41 @@ impl Repl {
     }
 
     async fn execute(&self, input: &str) -> Result<()> {
-        if input == "?" || input == "help" {
-            println!(
-                r#"
-    TODO
-"#
-            );
-        }
-
-        // exit process
-        if input == "exit" {
-            println!("Bye ~");
-            std::process::exit(0);
+        if input.starts_with('!') {
+            return self.execute_command(input).await;
         }
 
         println!("Unknown command: {}", input);
+        Ok(())
+    }
+
+    /// execute meta command
+    async fn execute_command(&self, command: &str) -> Result<()> {
+        match command {
+            "!help" => {
+                println!("TODO ~");
+            }
+            "!exit" => {
+                println!("Bye ~");
+                std::process::exit(0);
+            }
+            _ => {
+                println!("Unrecognized command: {}", command);
+            }
+        }
+        Ok(())
+    }
+
+    /// execute sql statement
+    async fn execute_statement(&self, statement: &Statement) -> Result<()> {
+        match statement.statement_type {
+            StatementType::Insert => {
+                println!("This is where we would do an insert.");
+            }
+            StatementType::Select => {
+                println!("This is where we would do a select.");
+            }
+        }
         Ok(())
     }
 
@@ -64,9 +84,10 @@ impl Repl {
         )?;
         writeln!(
             &self.console,
-            "Connected to {}. Enter {} for help.\n",
+            "Connected to {}. Enter {} for help and {} for exit.\n",
             self.name.as_str(),
-            style("? or help").cyan()
+            style("!help").cyan(),
+            style("!exit").cyan()
         )?;
 
         loop {
@@ -83,4 +104,23 @@ impl Default for Repl {
     fn default() -> Self {
         Self::new()
     }
+}
+
+enum MetaCommandResult {
+    Success,
+    UnrecognizedCommand,
+}
+
+enum PrepareResult {
+    Success,
+    UnrecognizedStatement,
+}
+
+enum StatementType {
+    Insert,
+    Select,
+}
+
+struct Statement {
+    statement_type: StatementType,
 }

@@ -1,10 +1,11 @@
+use std::fmt::{write, Debug};
+
 #[derive(Debug)]
 pub enum StatementType {
     Insert,
     Select,
 }
 
-#[derive(Debug)]
 pub struct Row {
     id: u32,
     username: String,
@@ -18,6 +19,16 @@ impl Row {
             username,
             email,
         }
+    }
+}
+
+impl Debug for Row {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Row(id: {}, username: {}, email: {})",
+            self.id, self.username, self.email
+        )
     }
 }
 

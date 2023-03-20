@@ -92,7 +92,10 @@ impl Repl {
     async fn execute_statement(&self, statement: &Statement) -> Result<()> {
         match statement.statement_type {
             StatementType::Insert => {
-                println!("executed insert: {:?}", statement.row_to_insert);
+                println!(
+                    "executed insert: {:?}",
+                    statement.row_to_insert.as_ref().unwrap()
+                );
             }
             StatementType::Select => {
                 println!("This is where we would do a select.");

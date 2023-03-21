@@ -1,5 +1,5 @@
 pub mod repl;
-mod retrive_sql;
+mod retrive;
 pub mod statement;
 
-use retrive_sql::retrive_insert_sql;
+use retrive::retrive_insert_sql;

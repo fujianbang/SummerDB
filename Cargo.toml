@@ -12,3 +12,6 @@ anyhow = "1.0.70"
 console = "0.15.5"
 regex = "1.7.1"
 tokio = { version = "1.26.0", features = ["rt", "macros", "rt-multi-thread"] }
+
+[dev-dependencies]
+tempfile = "3.4.0"
